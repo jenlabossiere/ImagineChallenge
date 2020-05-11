@@ -16,12 +16,13 @@ public class ChallengeImagineJSON {
 		ArrayList<String> metaData = new ArrayList<String>();
 		ArrayList<String> activeUsers = new ArrayList<String>();
  		
+		// File to load the JSON object
 		File file = new File("resources/audit.json");
 		Object obj = initialize(file);
 		JSONObject fullRecords = (JSONObject) obj;
 		JSONArray listOfRecords = (JSONArray)fullRecords.get("RECORDS");
 		
-		
+		// The JSON array listOfRecords has individual objects. We will extract each one of them to get the individual data elements
 		for (int i = 0; i < listOfRecords.size(); i++) {
 			JSONObject oneRecord = (JSONObject)listOfRecords.get(i);
 			
@@ -43,20 +44,31 @@ public class ChallengeImagineJSON {
 		}
 		
 		
-		// initializing variables for looking at stats
+		// Initializing variables
 		String when;
 		
-		// Let's look at some info from our JSON file
-		int amountOfRecords = createdIDs(IDList);
+		/**
+		 * Analyzing portion
+		 */
 		
+		// IDs are unique, so there's nothing to compare the values with. Thus, we probably want to know the amount of IDs we have
+		int amountOfRecords = IDStats(IDList);
+		
+		
+		// Our datesCreated list shows the time and date when the record was created. For this, any information might be useful
+		// but in this case, it might be useful to know when the first and last were made. 
 		when = "first";
 		String firstDate = createdStats(datesCreated,when);
 		when = "last";
 		String lastDate = createdStats(datesCreated,when);
 		
-		ArrayList<String> allRisks = riskInfo(risks);
 		
-		int totalActiveUsers = countActiveUsers(activeUsers);
+		// Most of the records have no risks at all, but for the ones that do, we want to see the unique values of what might 
+		// be considered a risk. 
+		ArrayList<String> allRisks = riskStats(risks);
+		
+		// We might also want to see at any given time how many of our users are active 
+		int totalActiveUsers = activeUserStats(activeUsers);
 		
 		
 		
@@ -73,7 +85,7 @@ public class ChallengeImagineJSON {
 	 * @return
 	 */
 	
-	private static int countActiveUsers(ArrayList<String> activeUsers) {
+	private static int activeUserStats(ArrayList<String> activeUsers) {
 		int count = 0;
 		String bool; 
 		for (int i = 0; i < activeUsers.size(); i++) {
@@ -90,7 +102,7 @@ public class ChallengeImagineJSON {
 	 * @return
 	 */
 
-	private static ArrayList<String> riskInfo(ArrayList<String> risks) {
+	private static ArrayList<String> riskStats(ArrayList<String> risks) {
 		String risk;
 		ArrayList<String> allRisks = new ArrayList<String>();
 		for (int i = 0; i < risks.size(); i++) {
@@ -131,7 +143,7 @@ public class ChallengeImagineJSON {
 	 * @return the amount of IDs initialized
 	 */
 	
-	private static int createdIDs(ArrayList<String> IDList) {
+	private static int IDStats(ArrayList<String> IDList) {
 		return IDList.size();
 	}
 
